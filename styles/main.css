@@ -1,0 +1,36 @@
+*{
+    margin: 0;
+}
+header{
+    min-height: 90px;
+    min-width: 900px;
+}
+#logo-img{
+    
+    padding-top: 20px;
+    padding-left: 10px;
+    width: 300px;
+}
+header h1{
+    display: inline-block;
+    margin-left: 15%;
+    padding-top: 15px;
+    font-size: 50px;
+}
+#account-btn{
+    width: 50px;
+    height: 50px;
+    float: right;
+    padding-top: 25px;
+    padding-right: 40px;
+}
+#account-btn:hover {
+    color: blue;
+}
+main{
+    height: calc(100vh - 90px);
+    background-image:url(assets/van-background1.jpg);
+    background-size:cover;
+    background-position:center;
+    min-width: 900px;
+}
