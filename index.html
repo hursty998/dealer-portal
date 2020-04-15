@@ -5,18 +5,159 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dealer Portal</title>
     <link rel="stylesheet" href="styles/main.css">
-    <script src="scripts/main.js"></script>
     <script src="https://kit.fontawesome.com/08ca90ab4f.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="http://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+    <script src="scripts/data.js"></script>
+    <script src="scripts/main.js"></script>
+    
 </head>
 <body>
     <header>
         <img id="logo-img" alt="logo" src="styles/assets/logo.png" >
         <h1>Dealer Portal</h1>
-        <i id="account-btn" class="fas fa-user-alt fa-2x"></i>
+        <h2>Name of Dealer</h2>
+        <i id="account-btn" class="fas fa-user-alt fa-2x" onmouseover="displayInfo()"></i>
         
     </header>
     <main>
+        <div id="account-info">
+            <h3 id="client-name">Name</h3>
+            <button id="change-password" >Change Password</button>
+            <button id="log-off">Log Off</button>
+        </div>
         
+        <div id="table-container">
+            <!--<table id="datatable" >
+                <thead>
+                    <tr>
+                        <th>Order Number</th>
+                        <th>Q Number</th>
+                        <th>Vehicle</th>
+                        <th>Date</th>
+                        <th>Customer Name</th>
+                        <th class="hideReg">Reg</th>
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Order Number</td>
+                        <td>Q7637</td>
+                        <td>Reg</td>
+                        <td>Mercades</td>
+                        <td>Reg</td>
+                        <td>Mercades</td>
+                    </tr>
+                </tbody>
+            </table>-->
+            <table id="datatable">
+                <thead>
+                    <tr>
+                        <th>Order Number</th>
+                        <th>Q Number</th>
+                        <th>Date</th>
+                        <th>preparedBy</th>
+                        <th>baseCose</th>
+                        <th>paintCost</th>
+                        <th>delivery</th>
+                        <th>VAT</th>
+                        <th>roadFundLicence</th>
+                        <th>govtFirstRegFee</th>
+                        <th>OTR</th>
+                        <th>Vehicle</th>
+                        <th>dateOfReg</th>
+                        <th>mileage</th>
+                        <th>exteriorColor</th>
+                        <th>interiorColor</th>
+                        <th>options</th>
+                        <th>Customer Name</th>
+                        <th>clientCompany</th>
+                        <th>contactNumber</th>
+                        <th>Delivery Address</th>
+                        <th>invoiceTo</th>
+                        <th>registerTo</th>
+                        <th>additionalInfo</th>
+                        <th>ETA</th>
+                        <th>orderConfirmed</th>
+                        <th>dateOfConfirmation</th>
+                        <th>nameWhoConfirmed</th>
+                        <th>Registration</th>
+                        <th>chassisNum</th>
+                        <th>actualDeliveryDate</th>
+                        <th>confirmedByGlobal</th>
+                        <th>dateOfReg</th>
+                        <th>checkedKeeper</th>
+                        <th>AFRLLink</th>
+                        <th>checkedInvoicedAmount</th>
+                        <th>checkedWhoInvoiceTo</th>
+                        <th>InvoiceLink</th>
+                        <th>deliveryMileage</th>
+                        <th>checkedSignee</th>
+                        <th>deliveryNoteLink</th>
+                        <th>paymentRecieved</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Q8297</td>
+                        <td>21/11/2019</td>
+                        <td>Nissan</td>
+                        <td>stevet</td>
+                        <td>11363.00</td>
+                        <td>48.00</td>
+                        <td>FOC</td>
+                        <td>1992.00</td>
+                        <td>197.00</td>
+                        <td>56.00</td>
+                        <td>11467.00</td>
+                        <td>&nbsp;</td>
+                        <td>0</td>
+                        <td>&nbsp;</td>
+                        <td>red</td>
+                        <td>&nbsp;</td>
+                        <td>Bradley Briley</td>
+                        <td>McDonalds</td>
+                        <td>07240420187</td>
+                        <td>BD3 9ED</td>
+                        <td>Funder3</td>
+                        <td>Bradley Briley BD3 9ED</td>
+                        <td>&nbsp;</td>
+                        <td>12/06/2020</td>
+                        <td>TRUE</td>
+                        <td>13/04/2020</td>
+                        <td>Sarah</td>
+                        <td>PM28 ND</td>
+                        <td>9688834903</td>
+                        <td>27/06/2020</td>
+                        <td>TRUE</td>
+                        <td>&nbsp;</td>
+                        <td>FALSE</td>
+                        <td>&nbsp;</td>
+                        <td>FALSE</td>
+                        <td>FALSE</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>FALSE</td>
+                        <td>&nbsp;</td>
+                        <td>FALSE</td>
+                        
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="tabs">
+            <button class="tab" onclick="show('all',0)" style="background-color: rgb(0, 43, 104);color: white;"><strong>All Orders</strong> </button><br>
+            <button class="tab" onclick="show('new',1);"><strong>New Orders Raised</strong> </button><br>
+            <button class="tab" onclick="show('awaiting-reg',2);"><strong>Awaiting Chassis/Reg</strong></button><br>
+            <button class="tab" onclick="show('delivery-date-requested',3)"><strong>Delivery Date Requested<strong></button><br>
+            <button class="tab" onclick="show('awaiting-global-confirmation',4)"><strong>Awaiting Global Confirmation<strong></button><br>
+            <button class="tab" onclick="show('confirmed-delivery',5)"><strong>Confirmed Delivery</strong></button><br>
+            <button class="tab" onclick="show('awaiting-payment',6)"><strong>Awaiting Payment</strong></button><br>
+            <button class="tab" onclick="show('completed',7)"><strong>Completed Orders</strong></button>
+        </div>
     </main>
 </body>
 </html>

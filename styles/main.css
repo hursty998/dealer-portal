@@ -1,5 +1,6 @@
 *{
     margin: 0;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 header{
     min-height: 90px;
@@ -13,9 +14,14 @@ header{
 }
 header h1{
     display: inline-block;
-    margin-left: 15%;
+    margin-left: 5%;
     padding-top: 15px;
     font-size: 50px;
+}
+header h2{
+    display: inline-block;
+    margin-left: 5%;
+    font-size: 30px;
 }
 #account-btn{
     width: 50px;
@@ -27,10 +33,72 @@ header h1{
 #account-btn:hover {
     color: blue;
 }
+#account-button:hover #account-info{
+    display: block;
+}
+#account-info{
+    display: none;
+    background-color: white;
+    border-radius: 10px;
+    margin-top: 10px;
+    margin-right: 10px;
+    padding-top: 10px;
+    width: 150px;
+    height: 100px;
+    float: right;
+    text-align: center;
+}
+#change-password{
+    border: none;
+    color: grey;
+    background-color: white;
+    margin-top: 10px;
+}
+#change-password:hover{
+    color: black;
+}
+#log-off{
+    border: solid black 1px ;
+    border-radius: 5px;
+    background-color: white;
+    margin-top: 10px;
+}
+#log-off:hover{
+    border: none;
+    background-color: black;
+    color: white;
+}
+
 main{
     height: calc(100vh - 90px);
-    background-image:url(assets/van-background1.jpg);
+    /*background-image:url(assets/mercedes-background.jpg);*/
+    
     background-size:cover;
     background-position:center;
     min-width: 900px;
+}
+
+#tabs{
+    padding-top: 3%;
+    margin-left: 3%;
+}
+.tab{
+    font-size: 100%;
+    border: solid black 1px;
+    border-radius: 8px;
+    background-color: white;
+    width: 200px;
+    height: 50px;
+    margin-bottom: 10px;
+}
+#table-container{
+    position: absolute;
+    width: 68%;
+    height: 80%;
+    left: 25%;
+    background-color: white;
+    opacity: 1s;
+    padding: 10px 10px 10px 10px;
+    
+   /* overflow-y: scroll;*/
 }
