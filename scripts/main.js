@@ -13,16 +13,7 @@ function displayInfo(){
 
 var table
 $(document).ready(function() {
-    //fillTable("all",0)
-    table = initDT()
-    $('#datatable tbody').on('click', 'tr', function () {
-        var rowData = table.row( this ).data();
-        alert( 'You clicked on '+rowData[1]+'\'s row' );
-    } );
-    
-} );
-function initDT(){
-    var table1=$('#datatable').DataTable({
+    table = $('#datatable').DataTable({
         scrollY:        '70vh',
         scrollX: "60vh",
         scrollCollapse: true,
@@ -31,6 +22,7 @@ function initDT(){
         destroy: true,
         info: false,
         autoWidth: false,
+        //stripe: false,
         "ajax": "data/all.txt",
         "columnDefs": [
             {
@@ -40,12 +32,17 @@ function initDT(){
             }
         ]
     });
-    return table1
-}
+    $('#datatable tbody').on('click', 'tr', function () {
+        var rowData = table.row( this ).data();
+        //alert( 'You clicked on '+rowData[1]+'\'s row' );
+        showPopup(rowData)
+    } );
+} );
 
 //this function is called when a tab is clicked, it will firstly hange the colour of the selected tab to show that 
 //it is selected, then create the table with the new data from the server
 function show(file, tabNum){
+    hidePopup()
     var elements = document.getElementsByClassName('tab'); // get all elements
 	for(var i = 0; i < elements.length; i++){
         elements[i].style.backgroundColor = "white";
@@ -77,38 +74,12 @@ function show(file, tabNum){
         table.columns( [28] ).visible( false );
     }
 }
-
-
-
-/*
-
-function fillTable(status, tabNum){
-    var elements = document.getElementsByClassName('tab'); // get all elements
-	for(var i = 0; i < elements.length; i++){
-        elements[i].style.backgroundColor = "white";
-        elements[i].style.color ="black"
-    }
-    elements[tabNum].style.backgroundColor = "rgb(0, 43, 104)"
-    elements[tabNum].style.color = "white"
-
-    $('#datatable').DataTable().destroy();
-    $("#datatable tbody").empty()
-    $('.hideReg').remove()
-    for (var i=0;i<data.length;i++){
-        if (data[i].status==status || status=="all"){
-            $('#datatable').append("<tr><td>"+data[i].orderNum+"</td><td>"+data[i].qNum+"</td><td>"+data[i].vehicle+"</td><td>"+data[i].date+"</td><td>"+data[i].customerName+"</td><td class='hideReg'>"+data[i].regNum+"</td></tr>");
-            
-        }
-    }
-    if (status=="new" || status=="awaiting reg"){
-        $('.hideReg').remove()
-        
-    }
-    else{
-        $('#datatable thead tr').append("<th class='hideReg'>Reg</th>")
-        
-    }
-    initDT()
-    //table.columns.adjust().draw();
+function showPopup(rowData){
+    $('#table-container').hide()
+    $('#popup-title').html("Order: "+rowData[0]+" "+rowData[1])
+    $('#popup').show()
 }
-*/
+function hidePopup(){
+    $('#popup').hide()
+    $('#table-container').show()
+}

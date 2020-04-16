@@ -18,7 +18,7 @@
         <img id="logo-img" alt="logo" src="styles/assets/logo.png" >
         <h1>Dealer Portal</h1>
         <h2>Name of Dealer</h2>
-        <i id="account-btn" class="fas fa-user-alt fa-2x" onmouseover="displayInfo()"></i>
+        <i id="account-btn" class="fas fa-user-alt fa-2x" onclick="displayInfo()"></i>
         
     </header>
     <main>
@@ -27,32 +27,14 @@
             <button id="change-password" >Change Password</button>
             <button id="log-off">Log Off</button>
         </div>
-        
+        <div id="popup">
+            <button id="popup-back" onclick="hidePopup()"><strong>Go Back</strong></button>
+            <h1 id="popup-title"></h1>
+            
+        </div>
         <div id="table-container">
-            <!--<table id="datatable" >
-                <thead>
-                    <tr>
-                        <th>Order Number</th>
-                        <th>Q Number</th>
-                        <th>Vehicle</th>
-                        <th>Date</th>
-                        <th>Customer Name</th>
-                        <th class="hideReg">Reg</th>
-                        
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Order Number</td>
-                        <td>Q7637</td>
-                        <td>Reg</td>
-                        <td>Mercades</td>
-                        <td>Reg</td>
-                        <td>Mercades</td>
-                    </tr>
-                </tbody>
-            </table>-->
-            <table id="datatable">
+           
+            <table id="datatable" class="row-border hover /*order-column*/ stripe">
                 <thead>
                     <tr>
                         <th>Order Number</th>
@@ -158,6 +140,7 @@
             <button class="tab" onclick="show('awaiting-payment',6)"><strong>Awaiting Payment</strong></button><br>
             <button class="tab" onclick="show('completed',7)"><strong>Completed Orders</strong></button>
         </div>
+        
     </main>
 </body>
 </html>
