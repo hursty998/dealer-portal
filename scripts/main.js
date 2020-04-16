@@ -77,7 +77,7 @@ function show(file, tabNum){
 }
 function showPopup(rowData){
     $('#table-container').hide()
-    $('#popup-title').html("Order: "+rowData[0]+" "+rowData[1])
+    $('#popup-title').html("Order: "+rowData[0]+" - "+rowData[1]+" - "+rowData[2])
     $('#popup').show()
 }
 function hidePopup(){
