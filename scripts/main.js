@@ -36,6 +36,7 @@ $(document).ready(function() {
         var rowData = table.row( this ).data();
         //alert( 'You clicked on '+rowData[1]+'\'s row' );
         showPopup(rowData)
+        //
     } );
 } );
 
