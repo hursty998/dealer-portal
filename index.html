@@ -44,45 +44,22 @@
                         <th>Order Number</th>
                         <th>Q Number</th>
                         <th>Date</th>
-                        <th>preparedBy</th>
-                        <th>baseCose</th>
-                        <th>paintCost</th>
-                        <th>delivery</th>
-                        <th>VAT</th>
-                        <th>roadFundLicence</th>
-                        <th>govtFirstRegFee</th>
-                        <th>OTR</th>
                         <th>Vehicle</th>
-                        <th>dateOfReg</th>
-                        <th>mileage</th>
-                        <th>exteriorColor</th>
-                        <th>interiorColor</th>
-                        <th>options</th>
                         <th>Customer Name</th>
-                        <th>clientCompany</th>
-                        <th>contactNumber</th>
                         <th>Delivery Address</th>
-                        <th>invoiceTo</th>
-                        <th>registerTo</th>
-                        <th>additionalInfo</th>
+                        <th>Status</th>
+                        <th>More Info</th>
                         <th>ETA</th>
-                        <th>orderConfirmed</th>
-                        <th>dateOfConfirmation</th>
-                        <th>nameWhoConfirmed</th>
+                        <th>Confirm Order</th>
                         <th>Registration</th>
-                        <th>chassisNum</th>
-                        <th>actualDeliveryDate</th>
-                        <th>confirmedByGlobal</th>
-                        <th>dateOfReg</th>
-                        <th>checkedKeeper</th>
-                        <th>AFRLLink</th>
-                        <th>checkedInvoicedAmount</th>
-                        <th>checkedWhoInvoiceTo</th>
-                        <th>InvoiceLink</th>
-                        <th>deliveryMileage</th>
-                        <th>checkedSignee</th>
-                        <th>deliveryNoteLink</th>
-                        <th>paymentRecieved</th>
+                        <th>Chassis</th>
+                        <th>Actual Delivery Date</th>
+                        <th>Date of Registration</th>
+                        <th>AFRL</th>
+                        <th>Invoice</th>
+                        
+                        <th>Delivery Note</th>
+                        <th>Payment Recieved</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -102,47 +79,22 @@
                         <td>&nbsp;</td>
                         <td>0</td>
                         <td>&nbsp;</td>
-                        <td>red</td>
-                        <td>&nbsp;</td>
-                        <td>Bradley Briley</td>
-                        <td>McDonalds</td>
-                        <td>07240420187</td>
-                        <td>BD3 9ED</td>
-                        <td>Funder3</td>
-                        <td>Bradley Briley BD3 9ED</td>
-                        <td>&nbsp;</td>
-                        <td>12/06/2020</td>
-                        <td>TRUE</td>
-                        <td>13/04/2020</td>
-                        <td>Sarah</td>
-                        <td>PM28 ND</td>
-                        <td>9688834903</td>
-                        <td>27/06/2020</td>
-                        <td>TRUE</td>
-                        <td>&nbsp;</td>
-                        <td>FALSE</td>
-                        <td>&nbsp;</td>
-                        <td>FALSE</td>
-                        <td>FALSE</td>
-                        <td>&nbsp;</td>
-                        <td>&nbsp;</td>
-                        <td>FALSE</td>
-                        <td>&nbsp;</td>
-                        <td>FALSE</td>
-                        
+                        <td>red</td>   
+                        <td>red</td> 
+                        <td>red</td>               
                     </tr>
                 </tbody>
             </table>
         </div>
         <div id="tabs">
-            <button class="tab" onclick="show('all',0)" style="background-color: rgb(0, 43, 104);color: white;"><strong>All Orders</strong> </button><br>
-            <button class="tab" onclick="show('new',1);"><strong>New Orders Raised</strong> </button><br>
-            <button class="tab" onclick="show('awaiting-reg',2);"><strong>Awaiting Chassis/Reg</strong></button><br>
-            <button class="tab" onclick="show('delivery-date-requested',3)"><strong>Delivery Date Requested<strong></button><br>
-            <button class="tab" onclick="show('awaiting-global-confirmation',4)"><strong>Awaiting Global Confirmation<strong></button><br>
-            <button class="tab" onclick="show('confirmed-delivery',5)"><strong>Confirmed Delivery</strong></button><br>
-            <button class="tab" onclick="show('awaiting-payment',6)"><strong>Awaiting Payment</strong></button><br>
-            <button class="tab" onclick="show('completed',7)"><strong>Completed Orders</strong></button>
+            <button class="tab" onclick="changeTable('all',0)" style="background-color: rgb(0, 43, 104);color: white;"><strong>All Orders</strong> </button><br>
+            <button class="tab" onclick="changeTable('new',1);"><strong>New Orders Raised</strong> </button><br>
+            <button class="tab" onclick="changeTable('awaiting reg',2);"><strong>Awaiting Chassis/Reg</strong></button><br>
+            <button class="tab" onclick="changeTable('delivery date requested',3)"><strong>Delivery Date Requested<strong></button><br>
+            <button class="tab" onclick="changeTable('awaiting global confirmation',4)"><strong>Awaiting Global Confirmation<strong></button><br>
+            <button class="tab" onclick="changeTable('confirmed delivery',5)"><strong>Confirmed Delivery</strong></button><br>
+            <button class="tab" onclick="changeTable('awaiting payment',6)"><strong>Awaiting Payment</strong></button><br>
+            <button class="tab" onclick="changeTable('completed',7)"><strong>Completed Orders</strong></button>
         </div>
         
     </main>
