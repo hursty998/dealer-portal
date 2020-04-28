@@ -146,11 +146,11 @@ main{
     color: white;
 }
 .incomplete{
-    background-color: rgb(253, 65, 65);
+    
     background-size: 10%;
-    /*background: linear-gradient(90deg, red 5%, white 95%);*/
+    background: linear-gradient(90deg, red 3%, white 3%);
 }
 .complete{
-    /*background: linear-gradient(90deg, green 5%, white 95%);*/
-    background-color: green;
+    /*background: linear-gradient(90deg, green 5%, white 5%);*/
+    /*background-color: green;*/
 }
