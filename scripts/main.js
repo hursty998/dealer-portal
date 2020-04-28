@@ -11,9 +11,7 @@ function displayInfo(){
     }
 }
 
-var table
-var editor
-var displayingAll=true
+
 
 //place name/identifier of each data item here
 var dataNames = 
@@ -38,6 +36,9 @@ var dataNames =
     paymentRecieved: "Payment Received"
 
 }
+var table
+var editor
+var displayingAll=true
 $(document).ready(function() {
     
     table = $('#datatable').DataTable({
@@ -86,6 +87,7 @@ $(document).ready(function() {
         
     });
     
+    
     //this function allows the user to click a row within the all orders tab and it will take the user to the tab which the order is in and only display that order
     //this means that they can easily make the changes
     $('#datatable tbody').on('click', 'tr', function () {
@@ -122,6 +124,56 @@ $(document).ready(function() {
     } );
     
 } );
+var lastTab="new"
+var lastTabNum=1
+function refreshTable(){
+    table.destroy()
+    table.clear()
+    table = $('#datatable').DataTable({
+        scrollY:        '70vh',
+        scrollX: "60vh",
+        scrollCollapse: true,
+        paging: false,
+        order: [[ 2, "desc" ]],
+        destroy: true,
+        info: false,
+        autoWidth: false,
+        //stripe: false,
+        "ajax": "data/final.txt",
+        "columns": [
+            {"data": dataNames['orderNum']},
+            {"data": dataNames['qNum']},
+            {"data": dataNames['orderDate']},
+            {"data": dataNames['vehicle']},
+            {"data": dataNames['customerName']},
+            {"data": dataNames['deliveryAddress']},
+            {"data": dataNames['status']},
+            {"data": dataNames['eta']},
+            {"data": dataNames['confirmOrder']},
+            {"data": dataNames['regNum']},
+            {"data": dataNames['chassis']},
+            {"data": dataNames['deliveryDate']},
+            {"data": dataNames['dateOfRegistration']},
+            {"data": dataNames['afrl']},
+            {"data": dataNames['invoice']},
+            {"data": dataNames['deliveryNote']},
+            {"data": dataNames['paymentRecieved']},
+            {"data": dataNames['moreInfo']}
+
+        ],
+        "columnDefs": [
+            {
+                "targets": [],
+                "visible": false,
+                "searchable": false
+            }
+        ],
+        "initComplete": function(settings, json){
+            editableCells() //calls this function once table has finished initializing
+            changeTable(lastTab,lastTabNum)
+        }
+    })
+}
 
 function editableCells(){
     table.rows().every( function(rowIdx, tableLoop, rowLoop){
@@ -225,13 +277,16 @@ function confirmOrder(qNum){
     else{
         alert("Order: "+qNum+" has been confirmed with an ETA of: "+eta)
         //send eta and order confirmed to server using qNum
+        refreshTable()
     }
 }
 function changeReg(qNum, reg){
     alert("Order: "+qNum+" registration set to: "+reg)
+    refreshTable()
 }
 function changeChassis(qNum, chassis){
     alert("Order: "+qNum+" chasisis set to: "+chassis)
+    refreshTable()
 }
 var ADDArray=[]
 function addADD(qNum, date){
@@ -244,6 +299,7 @@ function confirmADD(qNum){
     }
     else{
         alert("Order: "+qNum+" actual delivery date set to: "+ADD)
+        refreshTable()
     }
 }
 var DoRArray =[]
@@ -257,12 +313,13 @@ function confirmDoR(qNum){
     }
     else{
         alert("Order: "+qNum+" date of registration set to: "+DoR)
+        refreshTable()
     }
 }
 
 
 
-function changeTable(whichTable, tabNum){
+function changeTable(whichTab, tabNum){
     var elements = document.getElementsByClassName('tab'); // get all elements
 	for(var i = 0; i < elements.length; i++){
         elements[i].style.backgroundColor = "white";
@@ -273,38 +330,40 @@ function changeTable(whichTable, tabNum){
     table.columns().visible( true )
     table.columns(6).search('').draw()
     table.search('').draw()
-    if (whichTable=="all"){
+    if (whichTab=="all"){
         displayingAll=true
     }
     else{
-        table.columns(6).search(whichTable).draw()
+        table.columns(6).search(whichTab).draw()
         displayingAll=false
     }
     
-    if (whichTable == "new"){
+    if (whichTab == "new"){
         table.columns([6,9,10,11,12,13,14,15,16]).visible( false )
     }
-    else if (whichTable == "awaiting reg"){
+    else if (whichTab == "awaiting reg"){
         table.columns([6,7,8,11,12,13,14,15,16]).visible( false )
     }
-    else if (whichTable =="delivery date requested"){
+    else if (whichTab =="delivery date requested"){
         table.columns([6,7,8,10,12,13,14,15,16]).visible( false )
     }
-    else if (whichTable =="awaiting global confirmation"){
+    else if (whichTab =="awaiting global confirmation"){
         table.columns([6,7,8,10,11,12,13,14,15,16]).visible( false )
     }
-    else if (whichTable =="confirmed delivery"){
+    else if (whichTab =="confirmed delivery"){
         table.columns([6,7,8,10,11,16]).visible( false )
     }
-    else if(whichTable =="awaiting payment"){
+    else if(whichTab =="awaiting payment"){
         table.columns([6,7,8,10,11,12,13,14,15]).visible( false )
     }
-    else if(whichTable=="completed"){
+    else if(whichTab=="completed"){
         table.columns([6,7,8,10,11,12,13,14,15,16]).visible( false )
     }
     else{
         table.columns([7,8,10,11,12,13,14,15,16]).visible( false )
     }
+    lastTab = whichTab
+    lastTabNum = tabNum
 }
 
 /*
