@@ -47,6 +47,7 @@ header h2{
     height: 100px;
     float: right;
     text-align: center;
+    background-color: gray;
 }
 #change-password{
     border: none;
@@ -143,4 +144,13 @@ main{
     width: 35%;
     background-color: blue;
     color: white;
+}
+.incomplete{
+    background-color: rgb(253, 65, 65);
+    background-size: 10%;
+    /*background: linear-gradient(90deg, red 5%, white 95%);*/
+}
+.complete{
+    /*background: linear-gradient(90deg, green 5%, white 95%);*/
+    background-color: green;
 }
