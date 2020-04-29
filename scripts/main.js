@@ -239,7 +239,10 @@ function editableCells(){
         var rowAFRL=rowData[dataNames['afrl']]
         var rowInvoice=rowData[dataNames['invoice']]
         var rowDeliveryNote=rowData[dataNames['deliveryNote']]
-        var rowPaymentRecieved=rowData[dataNames['paymentRecieved']]
+        //var rowPaymentRecieved=rowData[dataNames['paymentRecieved']]
+
+        var rowOrderForm = rowData[dataNames['moreInfo']]
+        table.cell(rowIdx,17).data("<button onclick='displayOrderForm(\""+qNum+"\",\""+rowOrderForm+"\")'>Order Form</button>")
         if(rowData[dataNames['orderNum']]==""){
             table.cell(rowIdx, 0).data("<input placeholder='Enter Order Number' onchange='editOrderNum(\""+qNum +"\",this.value)'></input>")
         }
@@ -336,15 +339,30 @@ function editOrderNum(qNum, thierNum){
 
 //onclick of the confirm order button, it will check if an eta for that order has been entered
 function confirmOrder(qNum){
-    var eta=etaArray[qNum]
-    if(eta==undefined){
-        alert("Please enter ETA before confirmation")
+    var eta=new Date(etaArray[qNum])
+    if(eta =="Invalid Date"){
+        alert ("Please enter valid date")
     }
     else{
         alert("Order: "+qNum+" has been confirmed with an ETA of: "+eta)
         //enter code for uploading the ETA and confirmation of order to the database of this order
         refreshTable()
     }
+    /*
+    if(eta==undefined){
+        alert("Please enter ETA before confirmation")
+    }
+    else{
+        if(eta instanceof Date){
+            alert("Order: "+qNum+" has been confirmed with an ETA of: "+eta)
+            //enter code for uploading the ETA and confirmation of order to the database of this order
+            refreshTable()
+        }
+        else{
+            alert("Invalid Date")
+        }
+        
+    }*/
 }
 function changeReg(qNum, reg){
     alert("Order: "+qNum+" registration set to: "+reg)
@@ -409,6 +427,10 @@ function paymentRecieved(qNum){
     refreshTable()
 }
 
+function displayOrderForm(qNum, orderForm){
+    //enter code for displaying the order form. orderForm could be a link to the form 
+    alert("Displaying order form for order: "+qNum)
+}
 
 
 
