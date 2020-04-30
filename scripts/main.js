@@ -239,14 +239,21 @@ function editableCells(){
         var rowAFRL=rowData[dataNames['afrl']]
         var rowInvoice=rowData[dataNames['invoice']]
         var rowDeliveryNote=rowData[dataNames['deliveryNote']]
-        //var rowPaymentRecieved=rowData[dataNames['paymentRecieved']]
-
         var rowOrderForm = rowData[dataNames['moreInfo']]
+
+        var todayDate = new Date()
+        var orderDateSplit = rowData[dataNames['orderDate']].split("/") //as it cannot convert dd/mm/yyyy to a date
+        var orderDate= new Date(orderDateSplit[2],orderDateSplit[1]-1,orderDateSplit[0])
+        var dateDifference =(todayDate-orderDate)/(1000*3600*24) //how old the order is in days
+
         table.cell(rowIdx,17).data("<button onclick='displayOrderForm(\""+qNum+"\",\""+rowOrderForm+"\")'>Order Form</button>")
         if(rowData[dataNames['orderNum']]==""){
             table.cell(rowIdx, 0).data("<input placeholder='Enter Order Number' onchange='editOrderNum(\""+qNum +"\",this.value)'></input>")
         }
         if(rowStatus=="new"){
+            if (dateDifference>=1){ //if order is more than one day old
+                $('tbody tr').eq(rowLoop).find('td').eq(0).addClass('overdue')
+            }
             table.cell(rowIdx, 7).data("<input onblur='changeETA(\""+qNum +"\",this.value)' type='date'></input>")
             table.cell(rowIdx, 8).data("<button onclick='confirmOrder(\""+qNum +"\")'>Confirm</button>")
             //highlight cells red
@@ -348,21 +355,7 @@ function confirmOrder(qNum){
         //enter code for uploading the ETA and confirmation of order to the database of this order
         refreshTable()
     }
-    /*
-    if(eta==undefined){
-        alert("Please enter ETA before confirmation")
-    }
-    else{
-        if(eta instanceof Date){
-            alert("Order: "+qNum+" has been confirmed with an ETA of: "+eta)
-            //enter code for uploading the ETA and confirmation of order to the database of this order
-            refreshTable()
-        }
-        else{
-            alert("Invalid Date")
-        }
-        
-    }*/
+   
 }
 function changeReg(qNum, reg){
     alert("Order: "+qNum+" registration set to: "+reg)
@@ -376,9 +369,9 @@ function changeChassis(qNum, chassis){
 }
 
 function confirmADD(qNum){
-    var ADD=ADDArray[qNum]
-    if(ADD==undefined){
-        alert("Please enter actual delivery date before proceding")
+    var ADD=new Date(ADDArray[qNum])
+    if(ADD =="Invalid Date"){
+        alert ("Please enter valid date")
     }
     else{
         alert("Order: "+qNum+" actual delivery date set to: "+ADD)
@@ -388,9 +381,9 @@ function confirmADD(qNum){
 }
 
 function confirmDoR(qNum){
-    var DoR = DoRArray[qNum]
-    if(DoR ==undefined){
-        alert("Please enter date of registration before proceding")
+    var DoR=new Date(DoRArray[qNum])
+    if(DoR =="Invalid Date"){
+        alert ("Please enter valid date")
     }
     else{
         //enter validation of the date of registration
