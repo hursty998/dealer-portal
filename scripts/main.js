@@ -153,6 +153,9 @@ function changeTable(whichTab, tabNum){
     else if (whichTab == "awaiting reg"){
         table.columns([6,7,8,11,12,13,14,15,16]).visible( false )
     }
+    else if (whichTab =="global holding"){
+        table.columns([6,7,8,10,11,12,13,14,15,16]).visible( false )
+    }
     else if (whichTab =="delivery date requested"){
         table.columns([6,7,8,10,12,13,14,15,16]).visible( false )
     }
@@ -228,6 +231,14 @@ function refreshTable(){
 //   ***   This function goes through each row in the table and changes the HTML of the cells
 //         Only the necessary inputs for the order are added to the rows. e.g. if the status of the row is 'new', then only the eta and confirm order cells become editable
 function editableCells(){
+    var numOrdersInNew=0
+    var numOrdersInAR=0
+    var numOrdersInGH=0
+    var numOrdersInDDR=0
+    var numOrdersInAGC=0
+    var numOrdersInCD=0
+    var numOrdersInAP=0
+    var numOrdersInCompleted=0
     table.rows().every( function(rowIdx, tableLoop, rowLoop){
         var rowData = this.data()
         var qNum =rowData[dataNames['qNum']]
@@ -251,6 +262,7 @@ function editableCells(){
             table.cell(rowIdx, 0).data("<input placeholder='Enter Order Number' onchange='editOrderNum(\""+qNum +"\",this.value)'></input>")
         }
         if(rowStatus=="new"){
+            numOrdersInNew+=1
             if (dateDifference>=1){ //if order is more than one day old
                 $('tbody tr').eq(rowLoop).find('td').eq(0).addClass('overdue')
             }
@@ -260,6 +272,7 @@ function editableCells(){
             $('tbody tr').eq(rowLoop).find('td').eq(7).addClass('incomplete')
         }
         else if (rowStatus == "awaiting reg"){
+            numOrdersInAR+=1
             if(rowReg==""){
                 table.cell(rowIdx, 9).data("<input placeholder='Enter Registration' pattern='^[A-Za-z]{2}[ ]{0,1}[0-9]{2}[ ]{0,1}[a-zA-Z]{3}$' onchange='changeReg(\""+qNum +"\",this.value)'></input>")
                 //highlight cell red
@@ -281,11 +294,19 @@ function editableCells(){
                 $('tbody tr').eq(rowLoop).find('td').eq(10).addClass('complete')
             }
         }
+        else if(rowStatus=="global holding"){
+            numOrdersInGH+=1
+        }
         else if (rowStatus=="delivery date requested"){
+            numOrdersInDDR+=1
             table.cell(rowIdx, 11).data("<input onblur='addADD(\""+qNum +"\",this.value)' type='date'></input><button onclick='confirmADD(\""+qNum+"\")'>Ok</button>")
             $('tbody tr').eq(rowLoop).find('td').eq(11).addClass('incomplete')
         }
+        else if (rowStatus=="awaiting global confirmation"){
+            numOrdersInAGC+=1
+        }
         else if (rowStatus=="confirmed delivery"){
+            numOrdersInCD+=1
             if(rowDoR==""){
                 table.cell(rowIdx, 12).data("<input onblur='addDoR(\""+qNum +"\",this.value)' type='date'></input><button onclick='confirmDoR(\""+qNum+"\")'>Ok</button>")
                 $('tbody tr').eq(rowLoop).find('td').eq(12).addClass('incomplete')
@@ -317,9 +338,22 @@ function editableCells(){
             
         }
         else if(rowStatus=="awaiting payment"){
+            numOrdersInAP+=1
             table.cell(rowIdx, 16).data("<input type='checkbox' onclick='paymentRecieved(\""+qNum+"\")'></input>")
         }
+        else if (rowStatus=="completed"){
+            numOrdersInCompleted+=1
+        }
     })
+    $('#tabNum0').text(numOrdersInNew+numOrdersInAR+numOrdersInGH+numOrdersInDDR+numOrdersInAGC+numOrdersInCD+numOrdersInAP+numOrdersInCompleted)
+    $('#tabNum1').text(numOrdersInNew)
+    $('#tabNum2').text(numOrdersInAR)
+    $('#tabNum3').text(numOrdersInGH)
+    $('#tabNum4').text(numOrdersInDDR)
+    $('#tabNum5').text(numOrdersInAGC)
+    $('#tabNum6').text(numOrdersInCD)
+    $('#tabNum7').text(numOrdersInAP)
+    $('#tabNum8').text(numOrdersInCompleted)
 }
 
 //when an eta, actual delivery date or date of registration is changed, it will be stored in an associative array so when order is confirmed or ok button is clicked, it can easily be found in the function to validate it.

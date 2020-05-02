@@ -80,7 +80,7 @@ main{
 }
 
 #tabs{
-    padding-top: 3%;
+    padding-top: 1%;
     margin-left: 3vw;
     width: 15vw;
     float: left;
@@ -168,4 +168,19 @@ main{
     50%,100%{
         background-color: white;
     }
+}
+.tab strong{
+    width: 10vw;
+    display: inline-block;
+}
+.tab-number{
+    float: right;
+    background-color: red;
+    color: white;
+    border-radius: 12.5px;
+    min-width: 40px;
+    height: 20px;
+    padding: 2px 0px 2px 0px;
+    margin-right: 8px;
+    margin-top: 10px;
 }
