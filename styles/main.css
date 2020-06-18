@@ -102,7 +102,7 @@ main{
     background-color: white;
     opacity: 1s;
     padding: 10px 10px 10px 10px;
-    z-index: 100;
+    z-index: 1;
    /* overflow-y: scroll;*/
 }
 #popup{
@@ -183,4 +183,14 @@ main{
     padding: 2px 0px 2px 0px;
     margin-right: 8px;
     margin-top: 10px;
+}
+#uploadFile{
+    display: none;
+    position: absolute;
+    width: 65%;
+    height: 70%;
+    margin-top: 2%;
+    margin-left: 26%;
+    border-radius: 30px;
+    border: solid 2px rgb(0, 43, 104);
 }

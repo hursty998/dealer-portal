@@ -3,10 +3,12 @@ var infoShown = false
 function displayInfo(){
     if (infoShown==false){
         document.getElementById("account-info").style.display="block"
+        document.getElementById("table-container").style.zIndex="-1"
         infoShown =true
     }
     else{
         document.getElementById("account-info").style.display="none"
+        document.getElementById("table-container").style.zIndex="1"
         infoShown = false
     }
 }
@@ -33,9 +35,17 @@ var dataNames =
     dateOfRegistration: "Date of Registration",
     afrl: "AFRL",
     invoice: "Invoice",
-    deliveryNote: "Delivery note",
-    paymentRecieved: "Payment Received"
+    deliveryNote: "Delivery note"
 
+}
+var statusNames=
+{
+    new: "new",
+    AR: "awaiting reg",
+    GVP: "global vans processing",
+    DDR:"delivery date requested",
+    CD:"confirmed delivery",
+    completed:"completed"
 }
 var table
 var editor
@@ -62,7 +72,8 @@ $(document).ready(function() {
             {"data": dataNames['deliveryAddress']},
             {"data": dataNames['status']},
             {"data": dataNames['eta']},
-            {"data": dataNames['confirmOrder']},
+            {"data": undefined, "defaultContent":true},
+            //{"data": dataNames['confirmOrder']},
             {"data": dataNames['regNum']},
             {"data": dataNames['chassis']},
             {"data": dataNames['preferedDeliveryDate']},
@@ -71,8 +82,7 @@ $(document).ready(function() {
             {"data": dataNames['afrl']},
             {"data": dataNames['invoice']},
             {"data": dataNames['deliveryNote']},
-            {"data": dataNames['paymentRecieved']},
-            {"data": dataNames['moreInfo']}
+            {"data": undefined, "defaultContent":true}
 
         ],
         "columnDefs": [
@@ -93,12 +103,11 @@ $(document).ready(function() {
             {targets: 14, name:'afrl'},
             {targets: 15, name:'invoice'},
             {targets: 16, name:'deliveryNote'},
-            {targets: 17, name:'paymentRecieved'},
-            {targets: 18, name:'moreInfo'}
+            {targets: 17, name:'moreInfo'}
         ],
         "initComplete": function(settings, json){
             editableCells() //calls this function once table has finished initializing
-            changeTable("new",1)
+            changeTable(statusNames['new'],1)
         }
         
     });
@@ -116,20 +125,17 @@ $(document).ready(function() {
             else if (rowData['Status']=="awaiting reg"){
                 tabNum=2
             }
-            else if (rowData['Status']=="delivery date requested"){
+            else if (rowData['Status']=="global vans processing"){
                 tabNum=3
             }
-            else if (rowData['Status']=="awaiting global confirmation"){
+            else if (rowData['Status']=="delivery date requested"){
                 tabNum=4
             }
             else if (rowData['Status']=="confirmed delivery"){
                 tabNum=5
             }
-            else if (rowData['Status']=="awaiting payment"){
-                tabNum=6
-            }
             else if (rowData['Status']=="completed"){
-                tabNum=7
+                tabNum=6
             }
             changeTable(rowData['Status'],tabNum)
             table.columns(1).search(rowData['Q Number']).draw()
@@ -142,60 +148,63 @@ $(document).ready(function() {
 } );
 
 //  ***  This function controls the tabs and which columns should be displayed when a tab is clicked
-var lastTab="new"
+var lastTab=statusNames['new']
 var lastTabNum=1
+var needsRefresh = false
 function changeTable(whichTab, tabNum){
-    var elements = document.getElementsByClassName('tab'); // get all elements
-	for(var i = 0; i < elements.length; i++){
-        elements[i].style.backgroundColor = "white";
-        elements[i].style.color ="black"
-    }
-    elements[tabNum].style.backgroundColor = "rgb(0, 43, 104)"
-    elements[tabNum].style.color = "white"
-    table.columns().visible( true )
-    table.columns(6).search('').draw()
-    table.search('').draw()
-    if (whichTab=="all"){
-        displayingAll=true
-    }
-    else{
-        table.columns(6).search(whichTab).draw()
-        displayingAll=false
-    }
-    table.columns([6,7,8,9,10,11,12,13,14,15,16,17]).visible(false)
-    if (whichTab == "new"){
-        table.columns(['eta:name','confirmOrder:name']).visible( true )
-    }
-    else if (whichTab == "awaiting reg"){
-        table.columns(['regNum:name','chassis:name']).visible( true )
-    }
-    else if (whichTab =="global holding"){
-        table.columns(['regNum:name']).visible( true )
-    }
-    else if (whichTab =="delivery date requested"){
-        table.columns(['regNum:name','preferedDeliveryDate:name','deliveryDate:name']).visible( true )
-    }
-    else if (whichTab =="awaiting global confirmation"){
-        table.columns(['regNum:name']).visible( true )
-    }
-    else if (whichTab =="confirmed delivery"){
-        table.columns(['regNum:name','dateOfRegistration:name','afrl:name','invoice:name','deliveryNote:name']).visible( true )
-    }
-    else if(whichTab =="awaiting payment"){
-        table.columns(['regNum:name','awaitingPayment:name']).visible( true )
-    }
-    else if(whichTab=="completed"){
-        table.columns(['regNum:name']).visible( true )
-    }
-    else{
-        table.columns(['regNum:name','status:name']).visible(true)
-    }
     lastTab = whichTab
     lastTabNum = tabNum
+    if (needsRefresh==true){
+        refreshTable()
+    }
+    else{
+        var elements = document.getElementsByClassName('tab'); // get all elements
+        for(var i = 0; i < elements.length; i++){
+            elements[i].style.backgroundColor = "white";
+            elements[i].style.color ="black"
+        }
+        elements[tabNum].style.backgroundColor = "rgb(0, 43, 104)"
+        elements[tabNum].style.color = "white"
+        table.columns().visible( true )
+        table.columns(6).search('').draw()
+        table.search('').draw()
+        if (whichTab=="all"){
+            displayingAll=true
+        }
+        else{
+            table.columns(6).search(whichTab).draw()
+            displayingAll=false
+        }
+        table.columns([6,7,8,9,10,11,12,13,14,15,16]).visible(false)
+        if (whichTab == statusNames['new']){
+            table.columns(['eta:name','confirmOrder:name']).visible( true )
+        }
+        else if (whichTab == statusNames['AR']){
+            table.columns(['regNum:name','chassis:name']).visible( true )
+        }
+        else if (whichTab ==statusNames['GVP']){
+            table.columns(['regNum:name']).visible( true )
+        }
+        else if (whichTab ==statusNames['DDR']){
+            table.columns(['regNum:name','preferedDeliveryDate:name','deliveryDate:name']).visible( true )
+        }
+        else if (whichTab ==statusNames['CD']){
+            table.columns(['regNum:name','dateOfRegistration:name','afrl:name','invoice:name','deliveryNote:name']).visible( true )
+        }
+        else if(whichTab==statusNames['completed']){
+            table.columns(['regNum:name']).visible( true )
+        }
+        else{
+            table.columns(['regNum:name','status:name']).visible(true)
+        }
+    }
+    
 }
 
 //   ***  This function is called whenever there is an upload to the server. It will clear the table and re create it with up to date information from the server
+
 function refreshTable(){
+    
     table.destroy()
     table.clear()
     table = $('#datatable').DataTable({
@@ -218,7 +227,8 @@ function refreshTable(){
             {"data": dataNames['deliveryAddress']},
             {"data": dataNames['status']},
             {"data": dataNames['eta']},
-            {"data": dataNames['confirmOrder']},
+            {"data": undefined, "defaultContent":true},
+            //{"data": dataNames['confirmOrder']},
             {"data": dataNames['regNum']},
             {"data": dataNames['chassis']},
             {"data": dataNames['preferedDeliveryDate']},
@@ -227,8 +237,7 @@ function refreshTable(){
             {"data": dataNames['afrl']},
             {"data": dataNames['invoice']},
             {"data": dataNames['deliveryNote']},
-            {"data": dataNames['paymentRecieved']},
-            {"data": dataNames['moreInfo']}
+            {"data": undefined, "defaultContent":true}
 
         ],
         "columnDefs": [
@@ -249,8 +258,7 @@ function refreshTable(){
             {targets: 14, name:'afrl'},
             {targets: 15, name:'invoice'},
             {targets: 16, name:'deliveryNote'},
-            {targets: 17, name:'paymentRecieved'},
-            {targets: 18, name:'moreInfo'}
+            {targets: 17, name:'moreInfo'}
         ],
         "initComplete": function(settings, json){
             editableCells() //calls this function once table has finished initializing
@@ -258,6 +266,9 @@ function refreshTable(){
         }
         
     });
+    needsRefresh = false
+    
+    
 }
 
 //   ***   This function goes through each row in the table and changes the HTML of the cells
@@ -267,9 +278,7 @@ function editableCells(){
     var numOrdersInAR=0
     var numOrdersInGH=0
     var numOrdersInDDR=0
-    var numOrdersInAGC=0
     var numOrdersInCD=0
-    var numOrdersInAP=0
     var numOrdersInCompleted=0
     table.rows().every( function(rowIdx, tableLoop, rowLoop){
         var rowData = this.data()
@@ -289,24 +298,24 @@ function editableCells(){
         var orderDate= new Date(orderDateSplit[2],orderDateSplit[1]-1,orderDateSplit[0])
         var dateDifference =(todayDate-orderDate)/(1000*3600*24) //how old the order is in days
 
-        table.cell(rowIdx,18).data("<button onclick='displayOrderForm(\""+qNum+"\",\""+rowOrderForm+"\")'>Order Form</button>")
-        if(rowData[dataNames['orderNum']]==""){
-            table.cell(rowIdx, 0).data("<input placeholder='Enter Order Number' onchange='editOrderNum(\""+qNum +"\",this.value)'></input>")
+        table.cell(rowIdx,17).data("<button onclick='displayOrderForm(\""+qNum+"\",\""+rowOrderForm+"\")'>Order Form</button>")
+        if(rowData[dataNames['orderNum']]==null){
+            table.cell(rowIdx, 0).data("<input placeholder='Enter Order Number' onchange='editOrderNum(\""+qNum +"\",this.value,\""+rowIdx+"\")'></input>")
         }
-        if(rowStatus=="new"){
+        if(rowStatus==statusNames['new']){
             numOrdersInNew+=1
             if (dateDifference>=1){ //if order is more than one day old
                 $('tbody tr').eq(rowLoop).find('td').eq(0).addClass('overdue')
             }
             table.cell(rowIdx, 7).data("<input onblur='changeETA(\""+qNum +"\",this.value)' type='date'></input>")
-            table.cell(rowIdx, 8).data("<button onclick='confirmOrder(\""+qNum +"\")'>Confirm</button>")
+            table.cell(rowIdx, 8).data("<button onclick='confirmOrder(\""+qNum +"\",\""+rowIdx+"\")'>Confirm</button>")
             //highlight cells red
             $('tbody tr').eq(rowLoop).find('td').eq(7).addClass('incomplete')
         }
-        else if (rowStatus == "awaiting reg"){
+        else if (rowStatus == statusNames['AR']){
             numOrdersInAR+=1
             if(rowReg==""){
-                table.cell(rowIdx, 9).data("<input placeholder='Enter Registration' pattern='^[A-Za-z]{2}[ ]{0,1}[0-9]{2}[ ]{0,1}[a-zA-Z]{3}$' onchange='changeReg(\""+qNum +"\",this.value)'></input>")
+                table.cell(rowIdx, 9).data("<input placeholder='Enter Registration' onchange='changeReg(\""+qNum +"\",this.value,\""+rowIdx+"\")'></input>")
                 //highlight cell red
                 $('tbody tr').eq(rowLoop).find('td').eq(9).addClass('incomplete')
             }
@@ -316,7 +325,7 @@ function editableCells(){
             }
             
             if(rowChassis==undefined){
-                table.cell(rowIdx, 10).data("<input placeholder='Enter Chassis' onchange='changeChassis(\""+qNum +"\",this.value)'></input>")
+                table.cell(rowIdx, 10).data("<input placeholder='Enter Chassis' onchange='changeChassis(\""+qNum +"\",this.value,\""+rowIdx+"\")'></input>")
                 //highlight cell red
                 $('tbody tr').eq(rowLoop).find('td').eq(10).addClass('incomplete')
                 //once both chassis and reg are uploaded, status should change to delivery date requested
@@ -326,68 +335,69 @@ function editableCells(){
                 $('tbody tr').eq(rowLoop).find('td').eq(10).addClass('complete')
             }
         }
-        else if(rowStatus=="global holding"){
+        else if(rowStatus==statusNames['GVP']){
             numOrdersInGH+=1
         }
-        else if (rowStatus=="delivery date requested"){
+        else if (rowStatus==statusNames['DDR']){
             numOrdersInDDR+=1
-            table.cell(rowIdx, 12).data("<input onblur='addADD(\""+qNum +"\",this.value)' type='date'></input><button onclick='confirmADD(\""+qNum+"\")'>Ok</button>")
+            table.cell(rowIdx, 12).data("<input onblur='addADD(\""+qNum +"\",this.value)' type='date' style='width: 100px'></input><button onclick='confirmADD(\""+qNum+"\",\""+rowIdx+"\")'>Ok</button>")
             $('tbody tr').eq(rowLoop).find('td').eq(12).addClass('incomplete')
         }
-        else if (rowStatus=="awaiting global confirmation"){
-            numOrdersInAGC+=1
-        }
-        else if (rowStatus=="confirmed delivery"){
+        else if (rowStatus==statusNames['CD']){
             numOrdersInCD+=1
-            if(rowDoR==""){
-                table.cell(rowIdx, 13).data("<input onblur='addDoR(\""+qNum +"\",this.value)' type='date'></input><button onclick='confirmDoR(\""+qNum+"\")'>Ok</button>")
+            if(rowDoR==false){
+                table.cell(rowIdx, 13).data("<input onblur='addDoR(\""+qNum +"\",this.value)' type='date'></input><button onclick='confirmDoR(\""+qNum+"\",\""+rowIdx+"\")'>Ok</button>")
                 $('tbody tr').eq(rowLoop).find('td').eq(13).addClass('incomplete')
             }
             else{
                 $('tbody tr').eq(rowLoop).find('td').eq(13).addClass('complete')
             }
-            if(rowAFRL==""){
-                table.cell(rowIdx, 14).data("<input type='file' onchange='uploadAFRL(\""+qNum+"\",event)'></input>")
+            if(rowAFRL==false){
+                //table.cell(rowIdx, 14).data("<input type='file' onchange='uploadAFRL(\""+qNum+"\",event)'></input>")
+                table.cell(rowIdx, 14).data("<button onclick='uploadFile(\"AFRL\",\""+qNum+"\")'>Upload AFRL</button>")
                 $('tbody tr').eq(rowLoop).find('td').eq(14).addClass('incomplete')
             }
             else{
                 $('tbody tr').eq(rowLoop).find('td').eq(14).addClass('complete')
+                table.cell(rowIdx, 14).data('<i class="fas fa-check"></i>')
             }
-            if(rowInvoice==""){
-                table.cell(rowIdx, 15).data("<input type='file' onchange='uploadInvoice(\""+qNum+"\",event)'></input>")
+            if(rowInvoice==false){
+                //table.cell(rowIdx, 15).data("<input type='file' onchange='uploadInvoice(\""+qNum+"\",event)'></input>")
+                table.cell(rowIdx, 15).data("<button onclick='uploadFile(\"Invoice\",\""+qNum+"\")'>Upload Invoice</button>")
                 $('tbody tr').eq(rowLoop).find('td').eq(15).addClass('incomplete')
             }
             else{
-                $('tbody tr').eq(rowLoop).find('td').eq(14).addClass('complete')
+                $('tbody tr').eq(rowLoop).find('td').eq(15).addClass('complete')
+                table.cell(rowIdx, 15).data('<i class="fas fa-check"></i>')
             }
             if(rowDeliveryNote==""){
-                table.cell(rowIdx, 16).data("<input type='file' onchange='uploadDN(\""+qNum+"\",event)'</input>")
+                //table.cell(rowIdx, 16).data("<input type='file' onchange='uploadDN(\""+qNum+"\",event)'</input>")
+                table.cell(rowIdx, 16).data("<button onclick='uploadFile(\"Delivery Note\",\""+qNum+"\")'>Upload Delivery Note</button>")
                 $('tbody tr').eq(rowLoop).find('td').eq(16).addClass('incomplete')
             }
             else{
                 $('tbody tr').eq(rowLoop).find('td').eq(16).addClass('complete')
+                table.cell(rowIdx, 16).data('<i class="fas fa-check"></i>')
             }
             
         }
-        else if(rowStatus=="awaiting payment"){
-            numOrdersInAP+=1
-            table.cell(rowIdx, 17).data("<input type='checkbox' onclick='paymentRecieved(\""+qNum+"\")'></input>")
-        }
-        else if (rowStatus=="completed"){
+        else if (rowStatus==statusNames['completed']){
             numOrdersInCompleted+=1
         }
     })
-    $('#tabNum0').text(numOrdersInNew+numOrdersInAR+numOrdersInGH+numOrdersInDDR+numOrdersInAGC+numOrdersInCD+numOrdersInAP+numOrdersInCompleted)
+    $('#tabNum0').text(numOrdersInNew+numOrdersInAR+numOrdersInGH+numOrdersInDDR+numOrdersInCD+numOrdersInCompleted)
     $('#tabNum1').text(numOrdersInNew)
     $('#tabNum2').text(numOrdersInAR)
     $('#tabNum3').text(numOrdersInGH)
     $('#tabNum4').text(numOrdersInDDR)
-    $('#tabNum5').text(numOrdersInAGC)
-    $('#tabNum6').text(numOrdersInCD)
-    $('#tabNum7').text(numOrdersInAP)
-    $('#tabNum8').text(numOrdersInCompleted)
+    $('#tabNum5').text(numOrdersInCD)
+    $('#tabNum6').text(numOrdersInCompleted)
 }
 
+function changeCellText(val, rowIdx, col){
+    table.cell(rowIdx, col).data(val)
+    
+}
 //when an eta, actual delivery date or date of registration is changed, it will be stored in an associative array so when order is confirmed or ok button is clicked, it can easily be found in the function to validate it.
 var etaArray=[]
 function changeETA(qNum, date){
@@ -404,14 +414,14 @@ function addDoR(qNum, date){
 
 //  ***  Code to validate inputs and send them to the server   ***
 
-function editOrderNum(qNum, thierNum){
+function editOrderNum(qNum, thierNum, row){
     alert("Order Number of order: "+qNum+", has been set to: "+thierNum)
     //enter code for uploading the order number to the database of this order
-    refreshTable()
+    changeCellText(thierNum, row, 0, -1)
 }
 
 //onclick of the confirm order button, it will check if an eta for that order has been entered
-function confirmOrder(qNum){
+function confirmOrder(qNum, rowIdx){
     var eta=new Date(etaArray[qNum])
     if(eta =="Invalid Date"){
         alert ("Please enter valid date")
@@ -419,34 +429,40 @@ function confirmOrder(qNum){
     else{
         alert("Order: "+qNum+" has been confirmed with an ETA of: "+eta)
         //enter code for uploading the ETA and confirmation of order to the database of this order
-        refreshTable()
+        changeCellText(eta, rowIdx, 7)
+        changeCellText('<i class="fas fa-check"></i>', rowIdx, 8,-1)
+        needsRefresh=true
     }
    
 }
-function changeReg(qNum, reg){
+function changeReg(qNum, reg, row){
     alert("Order: "+qNum+" registration set to: "+reg)
+    changeCellText(reg, row, 9)
     //enter code for uploading the registration number to the database of this order
-    refreshTable()
+
+    needsRefresh=true
 }
-function changeChassis(qNum, chassis){
+function changeChassis(qNum, chassis, row){
     alert("Order: "+qNum+" chasisis set to: "+chassis)
+    changeCellText(chassis, row, 10)
     //enter code for uploading the chassis number to the database of this order
-    refreshTable()
+    needsRefresh=true
 }
 
-function confirmADD(qNum){
+function confirmADD(qNum,row){
     var ADD=new Date(ADDArray[qNum])
     if(ADD =="Invalid Date"){
         alert ("Please enter valid date")
     }
     else{
         alert("Order: "+qNum+" actual delivery date set to: "+ADD)
+        changeCellText(ADD,row,12)
         //enter code for uploading the actual delivery date to the database of this order
-        refreshTable()
+        needsRefresh=true
     }
 }
 
-function confirmDoR(qNum){
+function confirmDoR(qNum,row){
     var DoR=new Date(DoRArray[qNum])
     if(DoR =="Invalid Date"){
         alert ("Please enter valid date")
@@ -454,36 +470,26 @@ function confirmDoR(qNum){
     else{
         //enter validation of the date of registration
         alert("Order: "+qNum+" date of registration set to: "+DoR)
+        changeCellText(DoR,row,13)
         //enter code to upload date of registration to database for this order
-        refreshTable()
+        needsRefresh=true
     }
 }
-function uploadAFRL(qNum, evt){
-    var files = evt.target.files
-    var afrl = files[0]
-    alert(afrl.name+" AFRL uploaded for order "+qNum)
-    //enter code for uploading AFRL to database for this order
-    refreshTable()
-}
-function uploadInvoice(qNum, evt){
-    var files = evt.target.files
-    var invoice = files[0]
-    alert(invoice.name+" invoice uploaded for order "+qNum)
-    //enter code for uploading invoice to database for this order
-    refreshTable()
-}
-function uploadDN(qNum, evt){
-    var files = evt.target.files
-    var deliveryNote = files[0]
-    alert(deliveryNote.name+" delivery note uploaded for order "+qNum)
-    //enter code for uploading delivery note to database for this order
-    refreshTable()
+
+function closeUpload(){
+    document.getElementById("table-container").style.display="block"
+    document.getElementById("uploadFile").style.display="none"
 }
 
-function paymentRecieved(qNum){
-    alert("Payment recieved for order: "+qNum)
-    //enter code for making payment recieved on database true for this order
-    refreshTable()
+function uploadFile(type, qNum){
+    document.getElementById("table-container").style.display="none"
+    document.getElementById("uploadFile").style.display="block"
+    document.getElementById("upload-title").innerHTML="Upload "+type+" - "+qNum
+
+    var uploadingInProgress=false
+    if (uploadingInProgress==true){
+        document.getElementById("upload-cross").style.display="none"
+    }
 }
 
 function displayOrderForm(qNum, orderForm){
@@ -491,8 +497,30 @@ function displayOrderForm(qNum, orderForm){
     alert("Displaying order form for order: "+qNum)
 }
 
-
-
+/*
+table.cell(rowIdx, 15).data("<input type='file' onchange='uploadInvoice(\""+qNum+"\",event)'></input>")
+function uploadAFRL(qNum, evt){
+    var files = evt.target.files
+    var afrl = files[0]
+    alert(afrl.name+" AFRL uploaded for order "+qNum)
+    //enter code for uploading AFRL to database for this order
+    needsRefresh=true
+}
+function uploadInvoice(qNum, evt){
+    var files = evt.target.files
+    var invoice = files[0]
+    alert(invoice.name+" invoice uploaded for order "+qNum)
+    //enter code for uploading invoice to database for this order
+    needsRefresh=true
+}
+function uploadDN(qNum, evt){
+    var files = evt.target.files
+    var deliveryNote = files[0]
+    alert(deliveryNote.name+" delivery note uploaded for order "+qNum)
+    //enter code for uploading delivery note to database for this order
+    needsRefresh=true
+}
+*/
 
 /*
 //this function is called when a tab is clicked, it will firstly hange the colour of the selected tab to show that 
