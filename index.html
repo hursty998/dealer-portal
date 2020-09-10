@@ -19,6 +19,7 @@
         <h1>Dealer Portal</h1>
         <h2>Name of Dealer</h2>
         <i id="account-btn" class="fas fa-user-alt fa-2x" onclick="displayInfo()"></i>
+        <i id="notifications-btn" class="far fa-bell fa-2x" onclick="viewNotifications()"></i>
         
     </header>
     <main>
@@ -44,46 +45,28 @@
                     <tr>
                         <th>Order Number</th>
                         <th>Q Number</th>
-                        <th>Date</th>
-                        <th>Vehicle</th>
+                        <th>Order Raised</th>
+                        <th>Model</th>
                         <th>Customer Name</th>
-                        <th>Delivery Address</th>
+                        <th>Customer Address</th>
                         <th>Status</th>
-                        <th>ETA</th>
+                        <th>Expected ETA</th>
+                        <th>Queries</th>
                         <th>Confirm Order</th>
                         <th>Registration</th>
                         <th>Chassis</th>
-                        <th>Prefered Delivery Date</th>
+                        <th>Requested Delivery Date</th>
                         <th>Actual Delivery Date</th>
                         <th>Date of Registration</th>
                         <th>AFRL</th>
                         <th>Invoice</th>
                         <th>Delivery Note</th>
+                        <th>Delivery Details</th>
+                        <th>ATP</th>
                         <th>More Info</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>Q8297</td>
-                        <td>21/11/2019</td>
-                        <td>Nissan</td>
-                        <td>stevet</td>
-                        <td>11363.00</td>
-                        <td>48.00</td>
-                        <td>FOC</td>
-                        <td>1992.00</td>
-                        <td>197.00</td>
-                        <td>56.00</td>
-                        <td>11467.00</td>
-                        <td>&nbsp;</td>
-                        <td>0</td>
-                        <td>&nbsp;</td>
-                        <td>red</td>   
-                        <td>red</td> 
-                        <td>red</td>               
-                    </tr>
-                </tbody>
+                
             </table>
         </div>
         <div id="tabs">
@@ -92,13 +75,21 @@
             <button class="tab" onclick="changeTable('awaiting reg',2);"><div class="tab-number" id="tabNum2">100</div> <strong>Awaiting Chassis/Reg</strong></button><br>
             <button class="tab" onclick="changeTable('global vans processing',3);"><div class="tab-number" id="tabNum3">100</div> <strong>Global Vans Processing</strong></button><br>
             <button class="tab" onclick="changeTable('delivery date requested',4)"><div class="tab-number" id="tabNum4">100</div> <strong>Delivery Date Requested<strong></button><br>
-            <!--<button class="tab" onclick="changeTable('awaiting global confirmation',5)"><div class="tab-number" id="tabNum5">100</div><strong >Awaiting Global Confirmation<strong></button><br>-->
             <button class="tab" onclick="changeTable('confirmed delivery',5)"><div class="tab-number" id="tabNum5">100</div> <strong>Confirmed Delivery</strong></button><br>
-            <!--<button class="tab" onclick="changeTable('awaiting payment',7)"><div class="tab-number" id="tabNum7">100</div> <strong>Awaiting Payment</strong></button><br>-->
-            <button class="tab" onclick="changeTable('completed',6)"><div class="tab-number" id="tabNum6">100</div> <strong>Completed Orders</strong></button>
+            <button class="tab" onclick="changeTable('documents processing',6)"><div class="tab-number" id="tabNum6">100</div> <strong>Documents Processing</strong></button>
+            <button class="tab" onclick="changeTable('completed',7)"><div class="tab-number" id="tabNum7">100</div> <strong>Completed Orders</strong></button>
+            
+            <!-- <button class="tab" onclick="changeTable('notifications',8)" style="margin-top: 20px;"><div class="tab-number" id="numNotifications">0</div> <strong>Notifications</strong></button> -->
         </div>
-        <div id="uploadFile">
-            <i id="upload-cross" onclick="closeUpload()" style="color: red; float: right;margin-right: 30px; margin-top: 20px;" class="far fa-times-circle fa-2x"></i>
+        <div id="viewNotifications" class="modal-screen">
+            <h1 style="margin-left: 35%; margin-top: 20px;">Notifications</h1>
+        </div>
+        <div id="viewQueries" class="modal-screen">
+            <i id="upload-cross" onclick="closeModal()" style="color: red; float: right;margin-right: 30px; margin-top: 20px;" class="far fa-times-circle fa-2x"></i>
+            <h1 id="queries-title" style="margin-left: 35%; margin-top: 20px;">Queries</h1>
+        </div>
+        <div id="uploadFile" class="modal-screen">
+            <i id="upload-cross" onclick="closeModal()" style="color: red; float: right;margin-right: 30px; margin-top: 20px;" class="far fa-times-circle fa-2x"></i>
             <h1 id="upload-title" style="margin-left: 35%; margin-top: 20px;">Upload</h1>
         </div>
         
