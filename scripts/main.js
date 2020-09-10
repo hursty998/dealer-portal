@@ -341,13 +341,16 @@ function refreshTable(){
 //   ***   This function goes through each row in the table and changes the HTML of the cells
 //         Only the necessary inputs for the order are added to the rows. e.g. if the status of the row is 'new', then only the eta and confirm order cells become editable
 function editableCells(){
+    var numOrders =0
     var numOrdersInNew=0
     var numOrdersInAR=0
-    var numOrdersInGH=0
+    var numOrdersInGVP=0
     var numOrdersInDDR=0
     var numOrdersInCD=0
+    var numOrdersInDP=0
     var numOrdersInCompleted=0
     table.rows().every( function(rowIdx, tableLoop, rowLoop){
+        numOrders+=1
         var rowData = this.data()
         var qNum =rowData[dataNames['qNum']]
         var rowStatus=rowData[dataNames['status']]
@@ -415,7 +418,7 @@ function editableCells(){
             }
         }
         else if(rowStatus==statusNames['GVP']){
-            numOrdersInGH+=1
+            numOrdersInGVP+=1
         }
         else if (rowStatus==statusNames['DDR']){
             numOrdersInDDR+=1
@@ -463,17 +466,22 @@ function editableCells(){
             table.cell(rowIdx, deliveryDetailsIndex).data("<button onclick='viewDeliveryDetails(\""+qNum+"\")'>View Delivery Details</button>")
             
         }
+        else if(rowStatus==statusNames['DP']){
+            numOrdersInDP+=1
+            table.cell(rowIdx, deliveryDetailsIndex).data("<button onclick='viewDeliveryDetails(\""+qNum+"\")'>View Delivery Details</button>")
+        }
         else if (rowStatus==statusNames['completed']){
             numOrdersInCompleted+=1
         }
     })
-    $('#tabNum0').text(numOrdersInNew+numOrdersInAR+numOrdersInGH+numOrdersInDDR+numOrdersInCD+numOrdersInCompleted)
+    $('#tabNum0').text(numOrders)
     $('#tabNum1').text(numOrdersInNew)
     $('#tabNum2').text(numOrdersInAR)
-    $('#tabNum3').text(numOrdersInGH)
+    $('#tabNum3').text(numOrdersInGVP)
     $('#tabNum4').text(numOrdersInDDR)
     $('#tabNum5').text(numOrdersInCD)
-    $('#tabNum6').text(numOrdersInCompleted)
+    $('#tabNum6').text(numOrdersInDP)
+    $('#tabNum7').text(numOrdersInCompleted)
 }
 
 function changeCellText(val, rowIdx, col){
