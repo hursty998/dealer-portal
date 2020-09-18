@@ -26,10 +26,10 @@ var dataNames =
     preferedDeliveryDate: "Prefered Delivery Date",
     deliveryAddress: "Delivery Address",
     status: "Status",
-    moreInfo: "More Info",
+    // moreInfo: "More Info",//
     eta: "ETA",
     isQueried: "isQueried",
-    confirmOrder: "Confirm Order",
+    // confirmOrder: "Confirm Order", //
     regNum: "Registration",
     chassis: "Chassis",
     deliveryDate: "Actual Delivery Date",
@@ -62,6 +62,7 @@ var deliveryNoteIndex = 17
 var deliveryDetailsIndex = 18
 var atpIndex = 19
 var moreInfoIndex = 20
+var allDocumentsIndex =21
 
 // 6 before this
 
@@ -103,8 +104,7 @@ $(document).ready(function() {
             {"data": dataNames['status']},
             {"data": dataNames['eta']},
             {"data": dataNames['isQueried']},
-            {"data": undefined, "defaultContent":true},
-            //{"data": dataNames['confirmOrder']},
+            {"data": undefined, "defaultContent":true}, //confirm order button
             {"data": dataNames['regNum']},
             {"data": dataNames['chassis']},
             {"data": dataNames['preferedDeliveryDate']},
@@ -115,8 +115,8 @@ $(document).ready(function() {
             {"data": dataNames['deliveryNote']},
             {"data": undefined, "defaultContent":true}, //delivery details
             {"data": undefined, "defaultContent":true}, // atp
-
-            {"data": undefined, "defaultContent":true}
+            {"data": undefined, "defaultContent":true}, //more info
+            {"data": undefined, "defaultContent":true} //view all documets column
 
         ],
         "columnDefs": [
@@ -140,7 +140,8 @@ $(document).ready(function() {
             {targets: deliveryNoteIndex, name:'deliveryNote'},
             {targets: deliveryDetailsIndex, name:'deliveryDetails'},
             {targets: atpIndex, name:'atp'},
-            {targets: moreInfoIndex, name:'moreInfo'}
+            {targets: moreInfoIndex, name:'moreInfo'},
+            {targets: allDocumentsIndex, name:'allDocuments'}
         ],
         "initComplete": function(settings, json){
             editableCells() //calls this function once table has finished initializing
@@ -229,7 +230,7 @@ function changeTable(whichTab, tabNum){
         //     viewNotifications()
         //     return
         // }
-        table.columns([6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]).visible(false)
+        table.columns([6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21]).visible(false)
         // table.columns([toHide]).visible(false)
         if (whichTab == statusNames['new']){
             table.columns(['eta:name','isQueried:name','confirmOrder:name','moreInfo:name']).visible( true )
@@ -252,7 +253,7 @@ function changeTable(whichTab, tabNum){
             table.columns(['status:name', 'deliveryDetails:name', 'moreInfo:name']).visible(true)
         }
         else if(whichTab==statusNames['completed']){
-            table.columns(['regNum:name','moreInfo:name']).visible( true )
+            table.columns(['regNum:name', 'allDocuments:name']).visible( true )
         }
         else{
             table.columns(['regNum:name','status:name','moreInfo:name']).visible(true)
@@ -288,8 +289,7 @@ function refreshTable(){
             {"data": dataNames['status']},
             {"data": dataNames['eta']},
             {"data": dataNames['isQueried']},
-            {"data": undefined, "defaultContent":true},
-            //{"data": dataNames['confirmOrder']},
+            {"data": undefined, "defaultContent":true}, //confirm order button
             {"data": dataNames['regNum']},
             {"data": dataNames['chassis']},
             {"data": dataNames['preferedDeliveryDate']},
@@ -300,8 +300,8 @@ function refreshTable(){
             {"data": dataNames['deliveryNote']},
             {"data": undefined, "defaultContent":true}, //delivery details
             {"data": undefined, "defaultContent":true}, // atp
-
-            {"data": undefined, "defaultContent":true}
+            {"data": undefined, "defaultContent":true}, //more info
+            {"data": undefined, "defaultContent":true} //view all documets column
 
         ],
         "columnDefs": [
@@ -325,7 +325,8 @@ function refreshTable(){
             {targets: deliveryNoteIndex, name:'deliveryNote'},
             {targets: deliveryDetailsIndex, name:'deliveryDetails'},
             {targets: atpIndex, name:'atp'},
-            {targets: moreInfoIndex, name:'moreInfo'}
+            {targets: moreInfoIndex, name:'moreInfo'},
+            {targets: allDocumentsIndex, name:'allDocuments'}
         ],
         "initComplete": function(settings, json){
             editableCells() //calls this function once table has finished initializing
